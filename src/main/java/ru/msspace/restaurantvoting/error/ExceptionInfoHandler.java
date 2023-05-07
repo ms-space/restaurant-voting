@@ -4,7 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -16,22 +17,26 @@ public class ExceptionInfoHandler {
     private static final String DATA_CONFLICT = "DB data conflict";
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<String> notFoundError(NotFoundException exception, HttpServletRequest req) {
-        return logAndGetErrorInfo(req, exception, HttpStatus.NOT_FOUND, NOT_FOUND);
+    public ErrorResponse notFoundError(NotFoundException ex, HttpServletRequest req) {
+        return logAndGetErrorInfo(req, ex, HttpStatus.NOT_FOUND, NOT_FOUND);
     }
 
-    @ExceptionHandler(IllegalRequestDataException.class)
-    public ResponseEntity<String> illegalRequestDataError(IllegalRequestDataException exception, HttpServletRequest req) {
-        return logAndGetErrorInfo(req, exception, HttpStatus.UNPROCESSABLE_ENTITY, BAD_REQUEST);
+    @ExceptionHandler({IllegalRequestDataException.class, BindException.class})
+    public ErrorResponse illegalRequestDataError(Exception ex, HttpServletRequest req) {
+        return logAndGetErrorInfo(req, ex, HttpStatus.UNPROCESSABLE_ENTITY, BAD_REQUEST);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<String> dataIntegrityViolationError(DataIntegrityViolationException exception, HttpServletRequest req) {
-        return logAndGetErrorInfo(req, exception, HttpStatus.CONFLICT, DATA_CONFLICT);
+    public ErrorResponse dataIntegrityViolationError(DataIntegrityViolationException ex, HttpServletRequest req) {
+        return logAndGetErrorInfo(req, ex, HttpStatus.CONFLICT, DATA_CONFLICT);
     }
 
-    private ResponseEntity<String> logAndGetErrorInfo(HttpServletRequest req, Exception e, HttpStatus httpStatus, String error) {
-        log.error("{}. Exception '{}', at request {}. {}", error, httpStatus, req.getRequestURL(), e.getLocalizedMessage());
-        return ResponseEntity.status(httpStatus).body(error);
+    private ErrorResponse logAndGetErrorInfo(HttpServletRequest req, Exception ex, HttpStatus status, String detail) {
+        ErrorResponse resp = ErrorResponse.builder(ex, status, detail).title("qqq").build();
+        log.error("Exception '{}',  at request '{}'. {}",
+                detail,
+                req.getRequestURI(),
+                ex.getMessage());
+        return resp;
     }
 }
