@@ -5,11 +5,12 @@ VALUES ('User1', 'user1@yandex.ru', '{noop}password'),
 
 INSERT INTO USER_ROLE (role, user_id)
 VALUES ('USER', 1),
-       ('ADMIN', 2);
+       ('USER', 2),
+       ('ADMIN', 3);
 
-INSERT INTO RESTAURANT (name)
-VALUES ('RESTAURANT1'),
-       ('RESTAURANT2');
+INSERT INTO RESTAURANT (name, address)
+VALUES ('RESTAURANT1', 'ADDRESS1'),
+       ('RESTAURANT2', 'ADDRESS2');
 
 INSERT INTO MENU (menu_date, price, restaurant_id)
 VALUES ('2023-05-01', 500, 1),
