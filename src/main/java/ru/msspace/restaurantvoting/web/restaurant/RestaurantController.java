@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.msspace.restaurantvoting.model.Restaurant;
 import ru.msspace.restaurantvoting.repository.RestaurantRepository;
+import ru.msspace.restaurantvoting.service.RestaurantService;
 import ru.msspace.restaurantvoting.web.AuthUser;
 
 import java.net.URI;
@@ -27,6 +28,7 @@ public class RestaurantController {
     static final String REST_URL = "/api/admin/restaurants";
 
     private final RestaurantRepository repository;
+    private final RestaurantService service;
 
     @GetMapping("/{id}")
     public Restaurant get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
@@ -52,14 +54,12 @@ public class RestaurantController {
     public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update restaurant {} by user {}", restaurant, authUser.id());
         assureIdConsistent(restaurant, id);
-        repository.getExisted(id);
-        repository.save(restaurant);
+        service.update(restaurant, id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> create(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Restaurant restaurant) {
-        int userId = authUser.id();
-        log.info("create restaurant {} by user {}", restaurant, userId);
+        log.info("create restaurant {} by user {}", restaurant, authUser.id());
         checkNew(restaurant);
         Restaurant created = repository.save(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
