@@ -21,6 +21,9 @@ public interface MenuRepository extends BaseRepository<Menu> {
     @Query("SELECT m FROM Menu m JOIN FETCH m.dishes WHERE m.restaurant.id=:restaurantId")
     List<Menu> getAll(int restaurantId);
 
+    @Query("SELECT m FROM Menu m JOIN FETCH m.dishes WHERE m.date=:date")
+    List<Menu> getAllByDate(LocalDate date);
+
     default Menu getExistedOrBelonged(int restaurantId, int menuId) {
         return getByIdAndRestaurant(restaurantId, menuId).orElseThrow(
                 () -> new DataConflictException("Menu with id=" + menuId + " is not exist or doesn't belong restaurant id=" + restaurantId));

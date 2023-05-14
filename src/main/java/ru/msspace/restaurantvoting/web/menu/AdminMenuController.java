@@ -27,7 +27,7 @@ import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.checkNe
 @RequestMapping(value = AdminMenuController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
-public class AdminMenuController {
+public class AdminMenuController extends AbstractMenuController {
     static final String REST_URL = "/api/admin/restaurants";
 
     private final MenuService service;
@@ -40,16 +40,14 @@ public class AdminMenuController {
         return MenuUtil.createTo(service.get(restaurantId, menuId));
     }
 
-    @GetMapping(value = "{restaurantId}/menus/by-date")
-    public MenuTo getByDate(@AuthenticationPrincipal AuthUser authUser,
-                            @PathVariable int restaurantId,
-                            @Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        log.info("get menu for date={} from restaurant id={} by user {}", date, restaurantId, authUser.id());
+    @GetMapping(value = "menus/by-date")
+    public List<MenuTo> getAllByDate(@AuthenticationPrincipal AuthUser authUser,
+                                     @Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        log.info("getAllByDate date={} by user {}", date, authUser.id());
         if (date == null) {
             date = LocalDate.now();
-            log.info("set date {} and get menu", date);
         }
-        return MenuUtil.createTo(service.get(restaurantId, date));
+        return super.getAllByDate(date);
     }
 
     @GetMapping(value = "/{restaurantId}/menus")
