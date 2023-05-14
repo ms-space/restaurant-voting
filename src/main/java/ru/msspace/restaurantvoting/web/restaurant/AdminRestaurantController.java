@@ -1,6 +1,7 @@
 package ru.msspace.restaurantvoting.web.restaurant;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +18,11 @@ import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.checkNe
 
 @RestController
 @RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@AllArgsConstructor
 public class AdminRestaurantController extends AbstractRestaurantController {
     static final String REST_URL = "/api/admin/restaurants";
 
     private final RestaurantService service;
-
-    public AdminRestaurantController(RestaurantService service) {
-        this.service = service;
-    }
 
     @Override
     @GetMapping("/{id}")

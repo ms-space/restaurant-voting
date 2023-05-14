@@ -2,7 +2,6 @@ package ru.msspace.restaurantvoting.web.menu;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,7 +22,6 @@ import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.checkNe
 
 @RestController
 @RequestMapping(value = AdminMenuController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-@Slf4j
 @AllArgsConstructor
 public class AdminMenuController extends AbstractMenuController {
     static final String REST_URL = "/api/admin/restaurants";
