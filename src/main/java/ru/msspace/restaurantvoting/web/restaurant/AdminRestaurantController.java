@@ -12,6 +12,7 @@ import ru.msspace.restaurantvoting.service.RestaurantService;
 import ru.msspace.restaurantvoting.web.AuthUser;
 
 import java.net.URI;
+import java.util.List;
 
 import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.checkNew;
@@ -25,6 +26,18 @@ public class AdminRestaurantController extends AbstractRestaurantController {
 
     public AdminRestaurantController(RestaurantService service) {
         this.service = service;
+    }
+
+    @Override
+    @GetMapping("/{id}")
+    public Restaurant get(@PathVariable int id) {
+        return super.get(id);
+    }
+
+    @GetMapping
+    public List<Restaurant> getAll(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("getAll restaurants by user {}", authUser.id());
+        return repository.findAll();
     }
 
     @DeleteMapping("/{id}")
