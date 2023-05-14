@@ -20,20 +20,20 @@ public class MenuService {
     private final MenuRepository repository;
 
     @Transactional
-    public Menu save(int restaurantId, MenuTo menuTo) {
+    public MenuTo save(int restaurantId, MenuTo menuTo) {
         Restaurant restaurantExisted = restaurantRepository.getExisted(restaurantId);
-        Menu created = MenuUtil.createNewFromTo(menuTo);
-        created.setRestaurant(restaurantExisted);
-        return repository.save(created);
+        Menu menu = MenuUtil.createNewFromTo(menuTo);
+        menu.setRestaurant(restaurantExisted);
+        return MenuUtil.createTo(repository.save(menu));
     }
 
     @Transactional
     public void update(int restaurantId, MenuTo menuTo) {
         restaurantRepository.getExisted(restaurantId);
         Menu existedOrBelonged = repository.getExistedOrBelonged(restaurantId, menuTo.getId());
-        Menu updated = MenuUtil.createNewFromTo(menuTo);
-        updated.setRestaurant(existedOrBelonged.getRestaurant());
-        repository.save(updated);
+        Menu menu = MenuUtil.createNewFromTo(menuTo);
+        menu.setRestaurant(existedOrBelonged.getRestaurant());
+        repository.save(menu);
     }
 
     @Transactional

@@ -53,9 +53,9 @@ public class AdminMenuController extends AbstractMenuController {
 
     @PostMapping(value = "/{restaurantId}/menus", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MenuTo> create(@Valid @RequestBody MenuTo menuTo, @PathVariable int restaurantId) {
-        log.info("create menu on date {} for restaurant id={}", menuTo.getDate(), restaurantId);
+        log.info("create menu {} for restaurant id={}", menuTo, restaurantId);
         checkNew(menuTo);
-        MenuTo created = MenuUtil.createTo(service.save(restaurantId, menuTo));
+        MenuTo created = service.save(restaurantId, menuTo);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{restaurant_id}/menus/{id}")
                 .buildAndExpand(restaurantId, created.getId()).toUri();
@@ -67,7 +67,7 @@ public class AdminMenuController extends AbstractMenuController {
     public void update(@Valid @RequestBody MenuTo menuTo,
                        @PathVariable int restaurantId,
                        @PathVariable int menuId) {
-        log.info("update menu id={} {} for restaurant id={}", menuId, menuTo, restaurantId);
+        log.info("update menu {} for restaurant id={}", menuTo, restaurantId);
         assureIdConsistent(menuTo, menuId);
         service.update(restaurantId, menuTo);
     }
