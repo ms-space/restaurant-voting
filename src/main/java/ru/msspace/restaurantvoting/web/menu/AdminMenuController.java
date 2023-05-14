@@ -8,13 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.msspace.restaurantvoting.service.MenuService;
 import ru.msspace.restaurantvoting.to.MenuTo;
 import ru.msspace.restaurantvoting.util.MenuUtil;
-import ru.msspace.restaurantvoting.web.AuthUser;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -33,17 +31,14 @@ public class AdminMenuController extends AbstractMenuController {
     private final MenuService service;
 
     @GetMapping("{restaurantId}/menus/{menuId}")
-    public MenuTo get(@AuthenticationPrincipal AuthUser authUser,
-                      @PathVariable int restaurantId,
-                      @PathVariable int menuId) {
-        log.info("get menu id={} from restaurant id={} by user {}", menuId, restaurantId, authUser.id());
+    public MenuTo get(@PathVariable int restaurantId, @PathVariable int menuId) {
+        log.info("get menu id={} from restaurant id={}", menuId, restaurantId);
         return MenuUtil.createTo(service.get(restaurantId, menuId));
     }
 
+    @Override
     @GetMapping(value = "menus/by-date")
-    public List<MenuTo> getAllByDate(@AuthenticationPrincipal AuthUser authUser,
-                                     @Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        log.info("getAllByDate date={} by user {}", date, authUser.id());
+    public List<MenuTo> getAllByDate(@Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         if (date == null) {
             date = LocalDate.now();
         }
@@ -51,17 +46,14 @@ public class AdminMenuController extends AbstractMenuController {
     }
 
     @GetMapping(value = "/{restaurantId}/menus")
-    public List<MenuTo> getAll(@AuthenticationPrincipal AuthUser authUser,
-                               @PathVariable int restaurantId) {
-        log.info("get all menu from restaurant id={} by user {}", restaurantId, authUser.id());
+    public List<MenuTo> getAll(@PathVariable int restaurantId) {
+        log.info("get all menu from restaurant id={}", restaurantId);
         return MenuUtil.createTos(service.getAll(restaurantId));
     }
 
     @PostMapping(value = "/{restaurantId}/menus", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MenuTo> create(@AuthenticationPrincipal AuthUser authUser,
-                                         @Valid @RequestBody MenuTo menuTo,
-                                         @PathVariable int restaurantId) {
-        log.info("create menu on date {} for restaurant {} by user {}", menuTo.getDate(), restaurantId, authUser.id());
+    public ResponseEntity<MenuTo> create(@Valid @RequestBody MenuTo menuTo, @PathVariable int restaurantId) {
+        log.info("create menu on date {} for restaurant id={}", menuTo.getDate(), restaurantId);
         checkNew(menuTo);
         MenuTo created = MenuUtil.createTo(service.save(restaurantId, menuTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -72,11 +64,10 @@ public class AdminMenuController extends AbstractMenuController {
 
     @PutMapping(value = "/{restaurantId}/menus/{menuId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@AuthenticationPrincipal AuthUser authUser,
-                       @Valid @RequestBody MenuTo menuTo,
+    public void update(@Valid @RequestBody MenuTo menuTo,
                        @PathVariable int restaurantId,
                        @PathVariable int menuId) {
-        log.info("update menu id={} {} for restaurant id={} by user {}", menuId, menuTo, restaurantId, authUser.id());
+        log.info("update menu id={} {} for restaurant id={}", menuId, menuTo, restaurantId);
         assureIdConsistent(menuTo, menuId);
         service.update(restaurantId, menuTo);
     }
