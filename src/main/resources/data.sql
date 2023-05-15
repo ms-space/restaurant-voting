@@ -33,4 +33,4 @@ VALUES (1, 'Блюдо1'),
 INSERT INTO VOTE (vote_date, menu_id, user_id)
 VALUES ('2023-05-01', 1, 1),
        ('2023-05-01', 2, 2),
-       (CURRENT_DATE(), 3, 2);
+       (CURRENT_DATE(), 3, 1);

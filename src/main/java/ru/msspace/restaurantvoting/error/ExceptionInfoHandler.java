@@ -22,14 +22,20 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, ex, HttpStatus.NOT_FOUND, NOT_FOUND);
     }
 
-    @ExceptionHandler({IllegalRequestDataException.class, BindException.class, ValidationException.class})
-    public ErrorResponse illegalRequestDataError(Exception ex, HttpServletRequest req) {
+    @ExceptionHandler({IllegalRequestDataException.class,
+            BindException.class, ValidationException.class})
+    public ErrorResponse badRequestError(Exception ex, HttpServletRequest req) {
         return logAndGetErrorInfo(req, ex, HttpStatus.UNPROCESSABLE_ENTITY, BAD_REQUEST);
     }
 
     @ExceptionHandler({DataIntegrityViolationException.class, DataConflictException.class})
     public ErrorResponse dataConflictError(Exception ex, HttpServletRequest req) {
         return logAndGetErrorInfo(req, ex, HttpStatus.CONFLICT, DATA_CONFLICT);
+    }
+
+    @ExceptionHandler(VoteException.class)
+    public ErrorResponse voteError(Exception ex, HttpServletRequest req) {
+        return logAndGetErrorInfo(req, ex, HttpStatus.FORBIDDEN, ex.getMessage());
     }
 
     private ErrorResponse logAndGetErrorInfo(HttpServletRequest req, Exception ex, HttpStatus status, String detail) {
