@@ -9,7 +9,7 @@ import java.time.LocalTime;
 
 @UtilityClass
 public class VoteUtil {
-    private static final LocalTime END_VOTE = LocalTime.of(18, 0);
+    private static final LocalTime END_VOTE = LocalTime.of(11, 0);
 
     public static void checkTime(LocalTime current) {
         if (current.isAfter(END_VOTE)) {
