@@ -35,11 +35,8 @@ public class AdminMenuController extends AbstractMenuController {
     }
 
     @Override
-    @GetMapping(value = "menus/by-date")
+    @GetMapping(value = "menus")
     public List<MenuTo> getAllByDate(@Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        if (date == null) {
-            date = LocalDate.now();
-        }
         return super.getAllByDate(date);
     }
 

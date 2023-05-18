@@ -18,6 +18,9 @@ public abstract class AbstractMenuController {
     protected MenuRepository repository;
 
     public List<MenuTo> getAllByDate(LocalDate date) {
+        if (date == null) {
+            date = LocalDate.now();
+        }
         log.info("get all menus by date {}", date);
         return MenuUtil.createTos(repository.getAllByDate(date));
     }
