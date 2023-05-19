@@ -1,20 +1,22 @@
 package ru.msspace.restaurantvoting.web.vote;
 
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.msspace.restaurantvoting.to.VoteTo;
+import ru.msspace.restaurantvoting.util.DateTimeUtil;
 import ru.msspace.restaurantvoting.util.VoteUtil;
 import ru.msspace.restaurantvoting.web.AuthUser;
 
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.checkNew;
 
@@ -28,8 +30,7 @@ public class UserVoteController extends AbstractVoteController {
                                          @RequestBody VoteTo voteTo) {
         log.info("create vote {} from user {}", voteTo, authUser);
         checkNew(voteTo);
-        LocalDate date = LocalDate.now();
-        VoteTo created = service.create(voteTo, authUser, date);
+        VoteTo created = service.create(voteTo, authUser, LocalDate.now());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -42,12 +43,17 @@ public class UserVoteController extends AbstractVoteController {
                        @Valid @RequestBody VoteTo voteTo) {
         log.info("update vote {} from user {}", voteTo, authUser);
         LocalDateTime dateTime = LocalDateTime.now();
-        VoteUtil.checkTime(dateTime.toLocalTime());
+        DateTimeUtil.checkTime(dateTime.toLocalTime());
         service.update(voteTo, authUser, dateTime.toLocalDate());
     }
 
     @GetMapping
-    public List<VoteTo> getAll(@AuthenticationPrincipal AuthUser authUser) {
-        return super.getAllByUser(authUser);
+    public VoteTo getByUserAndDate(@AuthenticationPrincipal AuthUser authUser,
+                                   @Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        if (date == null) {
+            date = LocalDate.now();
+        }
+        log.info("get vote for user {} on date {}", authUser, date);
+        return VoteUtil.createTo(repository.getExistedOrBelonged(date, authUser.getUser()));
     }
 }

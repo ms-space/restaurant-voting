@@ -16,8 +16,8 @@ public interface VoteRepository extends BaseRepository<Vote> {
     @Query("SELECT v FROM Vote v WHERE  v.date=:date AND v.user=:user")
     Optional<Vote> getByUserAndDate(LocalDate date, User user);
 
-    @Query("SELECT v FROM Vote v WHERE  v.user=:user")
-    List<Vote> getAllByUser(User user);
+    @Query("SELECT v FROM Vote v WHERE  v.date=:date")
+    List<Vote> getAllByDate(LocalDate date);
 
     default Vote getExistedOrBelonged(LocalDate date, User user) {
         return getByUserAndDate(date, user).orElseThrow(

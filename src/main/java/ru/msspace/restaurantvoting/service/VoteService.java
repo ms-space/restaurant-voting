@@ -11,7 +11,6 @@ import ru.msspace.restaurantvoting.util.VoteUtil;
 import ru.msspace.restaurantvoting.web.AuthUser;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -32,9 +31,5 @@ public class VoteService {
         Menu menuExisted = menuService.get(voteTo.getRestaurantId(), date);
         Vote update = new Vote(voteExisted.getId(), authUser.getUser(), menuExisted, date);
         repository.save(update);
-    }
-
-    public List<VoteTo> getAllByUser(AuthUser authUser) {
-        return VoteUtil.createTos(repository.getAllByUser(authUser.getUser()));
     }
 }

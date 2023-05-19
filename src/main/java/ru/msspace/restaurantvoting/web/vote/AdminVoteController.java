@@ -1,28 +1,43 @@
 package ru.msspace.restaurantvoting.web.vote;
 
 import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.msspace.restaurantvoting.repository.UserRepository;
+import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.*;
 import ru.msspace.restaurantvoting.to.VoteTo;
-import ru.msspace.restaurantvoting.web.AuthUser;
+import ru.msspace.restaurantvoting.util.VoteUtil;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = AdminVoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class AdminVoteController extends AbstractVoteController {
-    static final String REST_URL = "api/admin/users/{id}/votes";
+    static final String REST_URL = "api/admin/votes";
 
-    protected UserRepository userRepository;
+    @GetMapping("/{id}")
+    public VoteTo get(@PathVariable int id) {
+        log.info("get vote id={}", id);
+        return VoteUtil.createTo(repository.getExisted(id));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable int id) {
+        log.info("delete vote id={}", id);
+        repository.deleteExisted(id);
+    }
 
     @GetMapping
-    public List<VoteTo> getAll(@PathVariable int id) {
-        AuthUser authUser = new AuthUser(userRepository.getExisted(id));
-        return super.getAllByUser(authUser);
+    public List<VoteTo> getAllByDate(
+            @Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        if (date == null) {
+            date = LocalDate.now();
+        }
+        log.info("get all votes on date {}", date);
+        return VoteUtil.createTos(repository.getAllByDate(date));
     }
 }
