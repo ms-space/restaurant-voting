@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.msspace.restaurantvoting.model.Restaurant;
-import ru.msspace.restaurantvoting.repository.RestaurantRepository;
+import ru.msspace.restaurantvoting.service.RestaurantService;
 
 import java.net.URI;
 import java.util.List;
@@ -25,7 +25,7 @@ import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.checkNe
 public class AdminRestaurantController extends AbstractRestaurantController {
     static final String REST_URL = "/api/admin/restaurants";
 
-    private final RestaurantRepository repository;
+    private final RestaurantService service;
 
     @Override
     @GetMapping("/{id}")
@@ -47,6 +47,7 @@ public class AdminRestaurantController extends AbstractRestaurantController {
         repository.deleteExisted(id);
     }
 
+    @CacheEvict(allEntries = true)
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {

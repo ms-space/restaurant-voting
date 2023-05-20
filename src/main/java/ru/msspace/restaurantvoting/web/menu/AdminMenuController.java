@@ -35,12 +35,12 @@ public class AdminMenuController extends AbstractMenuController {
     }
 
     @Override
-    @GetMapping(value = "menus")
+    @GetMapping("/menus")
     public List<MenuTo> getAllByDate(@Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return super.getAllByDate(date);
     }
 
-    @GetMapping(value = "/{restaurantId}/menus")
+    @GetMapping("/{restaurantId}/menus")
     public List<MenuTo> getAll(@PathVariable int restaurantId) {
         log.info("get all menu from restaurant id={}", restaurantId);
         return MenuUtil.createTos(service.getAll(restaurantId));
