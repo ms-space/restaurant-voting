@@ -20,10 +20,13 @@ spring:
     username: sa
     password:
 
-    #logging:
-    #  level:
-    # transactions log
-    #    org.springframework.orm.jpa: DEBUG
-    #    org.springframework.transaction: DEBUG
-    # cache log
+springdoc.swagger-ui.path: /
+logging:
+  level:
+    root: WARN
+    ru.msspace.restaurantvoting: DEBUG
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
+
+#    org.springframework.orm.jpa: DEBUG
+#    org.springframework.transaction: DEBUG
 #    org.springframework.cache: TRACE
