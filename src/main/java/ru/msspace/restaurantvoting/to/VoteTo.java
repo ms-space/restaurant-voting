@@ -1,27 +1,26 @@
 package ru.msspace.restaurantvoting.to;
 
-import jakarta.validation.constraints.Positive;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
-
-import java.time.LocalDate;
+import lombok.experimental.NonFinal;
 
 @Value
+@NonFinal
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class VoteTo extends BaseTo {
-    int menuId;
 
-    @Positive
     int restaurantId;
 
-    LocalDate date;
-
-    public VoteTo(Integer id, int menuId, int restaurantId, LocalDate date) {
+    public VoteTo(Integer id, int restaurantId) {
         super(id);
-        this.menuId = menuId;
         this.restaurantId = restaurantId;
-        this.date = date;
+    }
+
+    @JsonIgnore
+    private void setId(int id) {
+        this.id = id;
     }
 }

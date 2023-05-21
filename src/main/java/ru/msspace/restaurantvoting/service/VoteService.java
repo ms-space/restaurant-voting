@@ -22,7 +22,7 @@ public class VoteService {
     public VoteTo create(VoteTo voteTo, AuthUser authUser, LocalDate date) {
         Menu menuExisted = menuService.get(voteTo.getRestaurantId(), date);
         Vote create = new Vote(null, authUser.getUser(), menuExisted, date);
-        return VoteUtil.createTo(repository.save(create));
+        return VoteUtil.createVoteTo(repository.save(create));
     }
 
     @Transactional

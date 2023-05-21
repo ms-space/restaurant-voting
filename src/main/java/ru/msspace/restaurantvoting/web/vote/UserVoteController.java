@@ -9,6 +9,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.msspace.restaurantvoting.to.VoteInfoTo;
 import ru.msspace.restaurantvoting.to.VoteTo;
 import ru.msspace.restaurantvoting.util.DateTimeUtil;
 import ru.msspace.restaurantvoting.util.VoteUtil;
@@ -27,7 +28,7 @@ public class UserVoteController extends AbstractVoteController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<VoteTo> create(@AuthenticationPrincipal AuthUser authUser,
-                                         @RequestBody VoteTo voteTo) {
+                                             @RequestBody @Valid VoteTo voteTo) {
         log.info("create vote {} from user {}", voteTo, authUser);
         checkNew(voteTo);
         VoteTo created = service.create(voteTo, authUser, LocalDate.now());
@@ -40,7 +41,7 @@ public class UserVoteController extends AbstractVoteController {
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthUser authUser,
-                       @Valid @RequestBody VoteTo voteTo) {
+                       @RequestBody @Valid VoteTo voteTo) {
         log.info("update vote {} from user {}", voteTo, authUser);
         LocalDateTime dateTime = LocalDateTime.now();
         DateTimeUtil.checkTime(dateTime.toLocalTime());
@@ -48,12 +49,12 @@ public class UserVoteController extends AbstractVoteController {
     }
 
     @GetMapping
-    public VoteTo getByUserAndDate(@AuthenticationPrincipal AuthUser authUser,
-                                   @Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public VoteInfoTo getByUserAndDate(@AuthenticationPrincipal AuthUser authUser,
+                                       @Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         if (date == null) {
             date = LocalDate.now();
         }
         log.info("get vote for user {} on date {}", authUser, date);
-        return VoteUtil.createTo(repository.getExistedOrBelonged(date, authUser.getUser()));
+        return VoteUtil.createVoteInfoTo(repository.getExistedOrBelonged(date, authUser.getUser()));
     }
 }

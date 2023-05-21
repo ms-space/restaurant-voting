@@ -4,14 +4,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.hibernate.validator.constraints.Range;
-import ru.msspace.restaurantvoting.HasId;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
-public class MenuTo extends BaseTo implements HasId {
+public class MenuTo extends BaseTo {
 
     int restaurantId;
 
@@ -24,7 +23,7 @@ public class MenuTo extends BaseTo implements HasId {
     @Range(min = 0, max = 1000000)
     int price;
 
-    public MenuTo(Integer id, int restaurantId, LocalDate date, List<String> dishes, int price) {
+    public MenuTo(Integer id, int restaurantId, @NotNull LocalDate date, @NotNull List<String> dishes, int price) {
         super(id);
         this.restaurantId = restaurantId;
         this.date = date;
