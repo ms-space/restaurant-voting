@@ -1,5 +1,6 @@
 package ru.msspace.restaurantvoting.to;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -12,6 +13,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class MenuTo extends BaseTo {
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     int restaurantId;
 
     @NotNull

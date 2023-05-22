@@ -2,7 +2,6 @@ package ru.msspace.restaurantvoting.util;
 
 import lombok.experimental.UtilityClass;
 import ru.msspace.restaurantvoting.model.Vote;
-import ru.msspace.restaurantvoting.to.VoteInfoTo;
 import ru.msspace.restaurantvoting.to.VoteTo;
 
 import java.util.List;
@@ -11,14 +10,10 @@ import java.util.List;
 public class VoteUtil {
 
     public static VoteTo createVoteTo(Vote vote) {
-        return new VoteTo(vote.getId(), vote.getMenu().getRestaurant().id());
+        return new VoteTo(vote.id(), vote.getMenu().getRestaurant().id(), vote.getMenu().id(), vote.getDate());
     }
 
-    public static VoteInfoTo createVoteInfoTo(Vote vote) {
-        return new VoteInfoTo(vote.getId(), vote.getMenu().id(), vote.getMenu().getRestaurant().id(), vote.getDate());
-    }
-
-    public static List<VoteInfoTo> createVoteInfoTos(List<Vote> votes) {
-        return votes.stream().map(VoteUtil::createVoteInfoTo).toList();
+    public static List<VoteTo> createVoteTos(List<Vote> votes) {
+        return votes.stream().map(VoteUtil::createVoteTo).toList();
     }
 }

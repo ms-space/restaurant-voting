@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
-import ru.msspace.restaurantvoting.to.VoteInfoTo;
+import ru.msspace.restaurantvoting.to.VoteTo;
 import ru.msspace.restaurantvoting.util.VoteUtil;
 
 import java.time.LocalDate;
@@ -19,9 +19,9 @@ public class AdminVoteController extends AbstractVoteController {
     static final String REST_URL = "api/admin/votes";
 
     @GetMapping("/{id}")
-    public VoteInfoTo get(@PathVariable int id) {
+    public VoteTo get(@PathVariable int id) {
         log.info("get vote id={}", id);
-        return VoteUtil.createVoteInfoTo(repository.getExisted(id));
+        return VoteUtil.createVoteTo(repository.getExisted(id));
     }
 
     @DeleteMapping("/{id}")
@@ -32,12 +32,12 @@ public class AdminVoteController extends AbstractVoteController {
     }
 
     @GetMapping
-    public List<VoteInfoTo> getAllByDate(
+    public List<VoteTo> getAllByDate(
             @Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         if (date == null) {
             date = LocalDate.now();
         }
         log.info("get all votes on date {}", date);
-        return VoteUtil.createVoteInfoTos(repository.getAllByDate(date));
+        return VoteUtil.createVoteTos(repository.getAllByDate(date));
     }
 }
