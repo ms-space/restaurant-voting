@@ -37,6 +37,13 @@ public class MenuService {
     }
 
     @Transactional
+    public void delete(int restaurantId, int menuId) {
+        restaurantRepository.getExisted(restaurantId);
+        repository.getExistedOrBelonged(restaurantId, menuId);
+        repository.deleteExisted(menuId);
+    }
+
+    @Transactional
     public Menu get(int restaurantId, int menuId) {
         restaurantRepository.getExisted(restaurantId);
         return repository.getExistedOrBelonged(restaurantId, menuId);

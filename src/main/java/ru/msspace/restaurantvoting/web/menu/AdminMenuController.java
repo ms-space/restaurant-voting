@@ -66,4 +66,11 @@ public class AdminMenuController extends AbstractMenuController {
         assureIdConsistent(menuTo, menuId);
         service.update(restaurantId, menuTo);
     }
+
+    @DeleteMapping("/{restaurantId}/menus/{menuId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable int restaurantId, @PathVariable int menuId) {
+        log.info("delete  menu id={} for restaurant id={}", menuId, restaurantId);
+        service.delete(restaurantId, menuId);
+    }
 }
