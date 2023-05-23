@@ -3,6 +3,7 @@ package ru.msspace.restaurantvoting.util;
 import lombok.experimental.UtilityClass;
 import ru.msspace.restaurantvoting.error.VoteException;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @UtilityClass
@@ -13,5 +14,9 @@ public class DateTimeUtil {
         if (current.isAfter(END_VOTE)) {
             throw new VoteException("Too late to change the vote");
         }
+    }
+
+    public static LocalDate checkAndSetDate(LocalDate date) {
+        return date == null ? LocalDate.now() : date;
     }
 }

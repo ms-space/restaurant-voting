@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.msspace.restaurantvoting.repository.MenuRepository;
 import ru.msspace.restaurantvoting.to.MenuTo;
+import ru.msspace.restaurantvoting.util.DateTimeUtil;
 import ru.msspace.restaurantvoting.util.MenuUtil;
 
 import java.time.LocalDate;
@@ -18,9 +19,7 @@ public abstract class AbstractMenuController {
     protected MenuRepository repository;
 
     public List<MenuTo> getAllByDate(LocalDate date) {
-        if (date == null) {
-            date = LocalDate.now();
-        }
+        date = DateTimeUtil.checkAndSetDate(date);
         log.info("get all menus by date {}", date);
         return MenuUtil.createTos(repository.getAllByDate(date));
     }

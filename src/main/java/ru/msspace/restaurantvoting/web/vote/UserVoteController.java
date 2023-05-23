@@ -50,9 +50,7 @@ public class UserVoteController extends AbstractVoteController {
     @GetMapping
     public VoteTo getByUserAndDate(@AuthenticationPrincipal AuthUser authUser,
                                    @Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        if (date == null) {
-            date = LocalDate.now();
-        }
+        date = DateTimeUtil.checkAndSetDate(date);
         log.info("get vote for user {} on date {}", authUser, date);
         return VoteUtil.createVoteTo(repository.getExistedOrBelonged(date, authUser.getUser()));
     }

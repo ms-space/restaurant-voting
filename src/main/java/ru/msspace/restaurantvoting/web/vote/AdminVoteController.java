@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import ru.msspace.restaurantvoting.to.VoteTo;
+import ru.msspace.restaurantvoting.util.DateTimeUtil;
 import ru.msspace.restaurantvoting.util.VoteUtil;
 
 import java.time.LocalDate;
@@ -34,9 +35,7 @@ public class AdminVoteController extends AbstractVoteController {
     @GetMapping
     public List<VoteTo> getAllByDate(
             @Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        if (date == null) {
-            date = LocalDate.now();
-        }
+        date = DateTimeUtil.checkAndSetDate(date);
         log.info("get all votes on date {}", date);
         return VoteUtil.createVoteTos(repository.getAllByDate(date));
     }
