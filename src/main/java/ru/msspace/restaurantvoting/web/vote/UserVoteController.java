@@ -5,7 +5,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -17,15 +16,16 @@ import ru.msspace.restaurantvoting.web.AuthUser;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = UserVoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserVoteController extends AbstractVoteController {
-    static final String REST_URL = "api/user/votes";
+    static final String REST_URL = "api/user/vote";
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/today", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<VoteTo> create(@AuthenticationPrincipal AuthUser authUser,
                                          @RequestBody @Valid VoteTo voteTo) {
         log.info("create vote {} from user {}", voteTo, authUser);
@@ -37,7 +37,7 @@ public class UserVoteController extends AbstractVoteController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/today", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthUser authUser,
                        @RequestBody @Valid VoteTo voteTo) {
@@ -47,11 +47,10 @@ public class UserVoteController extends AbstractVoteController {
         service.update(voteTo, authUser, dateTime.toLocalDate());
     }
 
-    @GetMapping
-    public VoteTo getByUserAndDate(@AuthenticationPrincipal AuthUser authUser,
-                                   @Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        date = DateTimeUtil.checkAndSetDate(date);
+    @GetMapping("/by-date")
+    public List<VoteTo> getByDate(@AuthenticationPrincipal AuthUser authUser,
+                                  @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("get vote for user {} on date {}", authUser, date);
-        return VoteUtil.createVoteTo(repository.getExistedOrBelonged(date, authUser.getUser()));
+        return VoteUtil.createVoteTos(List.of(repository.getExistedOrBelonged(date, authUser.getUser())));
     }
 }

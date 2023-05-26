@@ -6,7 +6,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.msspace.restaurantvoting.service.MenuService;
@@ -34,10 +33,16 @@ public class AdminMenuController extends AbstractMenuController {
         return MenuUtil.createTo(service.get(restaurantId, menuId));
     }
 
-    @Override
-    @GetMapping("/menus")
-    public List<MenuTo> getAllByDate(@Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    @GetMapping("/menus/today")
+    public List<MenuTo> getAllByToday() {
+        LocalDate date = LocalDate.now();
         return super.getAllByDate(date);
+    }
+
+    @Override
+    @GetMapping("/menus/by-date")
+    public List<MenuTo> getAllByDate(@RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return MenuUtil.createTos(repository.getAllByDate(date));
     }
 
     @GetMapping("/{restaurantId}/menus")

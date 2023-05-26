@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import ru.msspace.restaurantvoting.to.VoteTo;
-import ru.msspace.restaurantvoting.util.DateTimeUtil;
 import ru.msspace.restaurantvoting.util.VoteUtil;
 
 import java.time.LocalDate;
@@ -32,10 +30,16 @@ public class AdminVoteController extends AbstractVoteController {
         repository.deleteExisted(id);
     }
 
-    @GetMapping
+    @GetMapping("/by-date")
     public List<VoteTo> getAllByDate(
-            @Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        date = DateTimeUtil.checkAndSetDate(date);
+            @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        log.info("get all votes on date {}", date);
+        return VoteUtil.createVoteTos(repository.getAllByDate(date));
+    }
+
+    @GetMapping("/today")
+    public List<VoteTo> getAllToday() {
+        LocalDate date = LocalDate.now();
         log.info("get all votes on date {}", date);
         return VoteUtil.createVoteTos(repository.getAllByDate(date));
     }
