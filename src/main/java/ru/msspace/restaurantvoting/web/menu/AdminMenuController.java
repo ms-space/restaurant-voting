@@ -23,11 +23,11 @@ import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.checkNe
 @RequestMapping(value = AdminMenuController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class AdminMenuController extends AbstractMenuController {
-    static final String REST_URL = "/api/admin/restaurants";
+    static final String REST_URL = "/api/admin";
 
     private final MenuService service;
 
-    @GetMapping("{restaurantId}/menus/{menuId}")
+    @GetMapping("restaurants/{restaurantId}/menus/{menuId}")
     public MenuTo get(@PathVariable int restaurantId, @PathVariable int menuId) {
         log.info("get menu id={} from restaurant id={}", menuId, restaurantId);
         return MenuUtil.createTo(service.get(restaurantId, menuId));
@@ -45,13 +45,13 @@ public class AdminMenuController extends AbstractMenuController {
         return MenuUtil.createTos(repository.getAllByDate(date));
     }
 
-    @GetMapping("/{restaurantId}/menus")
+    @GetMapping("restaurants/{restaurantId}/menus")
     public List<MenuTo> getAll(@PathVariable int restaurantId) {
         log.info("get all menu from restaurant id={}", restaurantId);
         return MenuUtil.createTos(service.getAll(restaurantId));
     }
 
-    @PostMapping(value = "/{restaurantId}/menus", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "restaurants/{restaurantId}/menus", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MenuTo> create(@Valid @RequestBody MenuTo menuTo, @PathVariable int restaurantId) {
         log.info("create menu {} for restaurant id={}", menuTo, restaurantId);
         checkNew(menuTo);
@@ -62,7 +62,7 @@ public class AdminMenuController extends AbstractMenuController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @PutMapping(value = "/{restaurantId}/menus/{menuId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "restaurants/{restaurantId}/menus/{menuId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody MenuTo menuTo,
                        @PathVariable int restaurantId,
@@ -72,7 +72,7 @@ public class AdminMenuController extends AbstractMenuController {
         service.update(restaurantId, menuTo);
     }
 
-    @DeleteMapping("/{restaurantId}/menus/{menuId}")
+    @DeleteMapping("restaurants/{restaurantId}/menus/{menuId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int restaurantId, @PathVariable int menuId) {
         log.info("delete  menu id={} for restaurant id={}", menuId, restaurantId);

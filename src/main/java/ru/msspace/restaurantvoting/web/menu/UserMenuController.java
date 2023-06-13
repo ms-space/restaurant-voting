@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = UserMenuController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserMenuController extends AbstractMenuController {
-    static final String REST_URL = "/api/user/restaurants/menus/today";
+    static final String REST_URL = "/api/user/menus/today";
 
     @GetMapping
     public List<MenuTo> getAllToday() {
