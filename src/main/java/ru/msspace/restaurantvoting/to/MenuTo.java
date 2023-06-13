@@ -16,6 +16,9 @@ public class MenuTo extends BaseTo {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     int restaurantId;
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    String restaurantAddress;
+
     @NotNull
     LocalDate date;
 
@@ -25,9 +28,10 @@ public class MenuTo extends BaseTo {
     @Range(min = 0, max = 1000000)
     int price;
 
-    public MenuTo(Integer id, int restaurantId, @NotNull LocalDate date, @NotNull List<String> dishes, int price) {
+    public MenuTo(Integer id, int restaurantId, String restaurantAddress, @NotNull LocalDate date, @NotNull List<String> dishes, int price) {
         super(id);
         this.restaurantId = restaurantId;
+        this.restaurantAddress = restaurantAddress;
         this.date = date;
         this.dishes = dishes;
         this.price = price;
