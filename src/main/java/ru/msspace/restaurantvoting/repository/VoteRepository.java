@@ -19,6 +19,9 @@ public interface VoteRepository extends BaseRepository<Vote> {
     @Query("SELECT v FROM Vote v WHERE  v.date=:date")
     List<Vote> getAllByDate(LocalDate date);
 
+    @Query("SELECT v FROM Vote v WHERE  v.user=:user")
+    List<Vote> getAllByUser(User user);
+
     default Vote getExistedOrBelonged(LocalDate date, User user) {
         return getByUserAndDate(date, user).orElseThrow(
                 () -> new DataConflictException("Vote with date=" + date + " is not exist or doesn't belong user id=" + user.id()));
