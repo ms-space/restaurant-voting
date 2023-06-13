@@ -34,8 +34,7 @@ public class UserVoteController extends AbstractVoteController {
         checkNew(voteTo);
         VoteTo created = service.create(voteTo, authUser, LocalDate.now());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/{id}")
-                .buildAndExpand(created.getId()).toUri();
+                .path(REST_URL + "/today").build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
