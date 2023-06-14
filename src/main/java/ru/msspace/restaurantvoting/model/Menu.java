@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.validator.constraints.Range;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,23 +29,15 @@ public class Menu extends BaseEntity {
     @NotNull
     private LocalDate date;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(name = "name", nullable = false)
-    @JoinColumn
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @CollectionTable(name = "dish", joinColumns = @JoinColumn(name = "menu_id"))
-    @NotNull
-    private List<String> dishes;
+    @JoinColumn(name = "menu_id")
+    private List<Dish> dishes;
 
-    @Column(name = "price", nullable = false)
-    @Range(min = 0, max = 1000000)
-    private int price;
-
-    public Menu(Integer id, Restaurant restaurant, LocalDate date, List<String> dishes, Integer price) {
+    public Menu(Integer id, Restaurant restaurant, @NotNull LocalDate date, List<Dish> dishes) {
         super(id);
         this.restaurant = restaurant;
         this.date = date;
         this.dishes = dishes;
-        this.price = price;
     }
 }

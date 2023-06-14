@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import org.hibernate.validator.constraints.Range;
+import ru.msspace.restaurantvoting.model.Dish;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,17 +23,13 @@ public class MenuTo extends BaseTo {
     LocalDate date;
 
     @NotNull
-    List<String> dishes;
+    List<Dish> dishes;
 
-    @Range(min = 0, max = 1000000)
-    int price;
-
-    public MenuTo(Integer id, int restaurantId, String restaurantAddress, @NotNull LocalDate date, @NotNull List<String> dishes, int price) {
+    public MenuTo(Integer id, int restaurantId, String restaurantAddress, @NotNull LocalDate date, @NotNull List<Dish> dishes) {
         super(id);
         this.restaurantId = restaurantId;
         this.restaurantAddress = restaurantAddress;
         this.date = date;
         this.dishes = dishes;
-        this.price = price;
     }
 }

@@ -11,7 +11,7 @@ public class MenuUtil {
 
     @SuppressWarnings("all")
     public static MenuTo createTo(Menu menu) {
-        return new MenuTo(menu.getId(), menu.getRestaurant().getId(), menu.getRestaurant().getAddress(), menu.getDate(), menu.getDishes(), menu.getPrice());
+        return new MenuTo(menu.getId(), menu.getRestaurant().getId(), menu.getRestaurant().getAddress(), menu.getDate(), menu.getDishes());
     }
 
     public static List<MenuTo> createTos(List<Menu> menus) {
@@ -19,6 +19,6 @@ public class MenuUtil {
     }
 
     public static Menu createNewFromTo(MenuTo menuTo) {
-        return new Menu(menuTo.getId(), null, menuTo.getDate(), menuTo.getDishes(), menuTo.getPrice());
+        return new Menu(menuTo.getId(), null, menuTo.getDate(), menuTo.getDishes());
     }
 }

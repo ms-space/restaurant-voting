@@ -12,27 +12,27 @@ INSERT INTO RESTAURANT (name, address)
 VALUES ('Restaurant1', 'Address1'),
        ('Restaurant2', 'Address2');
 
-INSERT INTO MENU (menu_date, price, restaurant_id)
-VALUES ('2023-05-01', 500, 1),
-       ('2023-05-01', 600, 2),
-       (CURRENT_DATE(), 320, 1),
-       (CURRENT_DATE(), 300, 2);
+INSERT INTO MENU (menu_date, restaurant_id)
+VALUES ('2023-06-01', 1),
+       ('2023-06-01', 2),
+       (CURRENT_DATE(), 1),
+       (CURRENT_DATE(), 2);
 
-INSERT INTO DISH (menu_id, name)
-VALUES (1, 'Блюдо1'),
-       (1, 'Блюдо2'),
-       (1, 'Блюдо3'),
-       (2, 'Блюдо4'),
-       (2, 'Блюдо5'),
-       (3, 'Блюдо6'),
-       (3, 'Блюдо7'),
-       (3, 'Блюдо8'),
-       (3, 'Блюдо9'),
-       (4, 'Блюдо10'),
-       (4, 'Блюдо11'),
-       (4, 'Блюдо12');
+INSERT INTO DISH (name, price, menu_id)
+VALUES ('Dish1', 200, 1),
+       ('Dish2', 220, 1),
+       ('Dish3', 300, 1),
+       ('Dish4', 250, 2),
+       ('Dish5', 200, 2),
+       ('Dish6', 120, 2),
+       ('Dish7', 400, 2),
+       ('Dish8', 450, 3),
+       ('Dish9', 700, 3),
+       ('Dish10', 500, 3),
+       ('Dish11', 300, 4),
+       ('Dish12', 800, 4);
 
 INSERT INTO VOTE (vote_date, restaurant_id, user_id)
 VALUES ('2023-05-01', 1, 1),
        ('2023-05-01', 2, 2),
-       (CURRENT_DATE(), 1, 1);
+       (CURRENT_DATE(), 1, 2);
