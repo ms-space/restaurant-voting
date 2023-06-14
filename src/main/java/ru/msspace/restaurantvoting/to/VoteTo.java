@@ -13,15 +13,11 @@ public class VoteTo extends BaseTo {
     int restaurantId;
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    int menuId;
-
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     LocalDate date;
 
-    public VoteTo(Integer id, int restaurantId, int menuId, LocalDate date) {
+    public VoteTo(Integer id, int restaurantId, LocalDate date) {
         super(id);
         this.restaurantId = restaurantId;
-        this.menuId = menuId;
         this.date = date;
     }
 }

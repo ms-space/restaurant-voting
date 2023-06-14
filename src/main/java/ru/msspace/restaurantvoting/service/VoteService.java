@@ -21,7 +21,7 @@ public class VoteService {
     @Transactional
     public VoteTo create(VoteTo voteTo, AuthUser authUser, LocalDate date) {
         Menu menuExisted = menuService.get(voteTo.getRestaurantId(), date);
-        Vote create = new Vote(null, authUser.getUser(), menuExisted, date);
+        Vote create = new Vote(null, authUser.getUser(), menuExisted.getRestaurant(), date);
         return VoteUtil.createVoteTo(repository.save(create));
     }
 
@@ -29,7 +29,7 @@ public class VoteService {
     public void update(VoteTo voteTo, AuthUser authUser, LocalDate date) {
         Vote voteExisted = repository.getExistedOrBelonged(date, authUser.getUser());
         Menu menuExisted = menuService.get(voteTo.getRestaurantId(), date);
-        Vote update = new Vote(voteExisted.getId(), authUser.getUser(), menuExisted, date);
+        Vote update = new Vote(voteExisted.getId(), authUser.getUser(), menuExisted.getRestaurant(), date);
         repository.save(update);
     }
 }

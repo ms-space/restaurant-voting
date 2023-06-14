@@ -26,17 +26,19 @@ public class Vote extends BaseEntity {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "menu_id", nullable = false)
+    @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Menu menu;
+    @NotNull
+    private Restaurant restaurant;
 
     @Column(name = "vote_date", nullable = false)
+    @NotNull
     private LocalDate date;
 
-    public Vote(Integer id, User user, Menu menu, LocalDate date) {
+    public Vote(Integer id, @NotNull User user, @NotNull Restaurant restaurant, @NotNull LocalDate date) {
         super(id);
         this.user = user;
-        this.menu = menu;
+        this.restaurant = restaurant;
         this.date = date;
     }
 }

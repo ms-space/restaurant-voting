@@ -10,7 +10,7 @@ import java.util.List;
 public class VoteUtil {
 
     public static VoteTo createVoteTo(Vote vote) {
-        return new VoteTo(vote.id(), vote.getMenu().getRestaurant().id(), vote.getMenu().id(), vote.getDate());
+        return new VoteTo(vote.id(), vote.getRestaurant().id(), vote.getDate());
     }
 
     public static List<VoteTo> createVoteTos(List<Vote> votes) {
