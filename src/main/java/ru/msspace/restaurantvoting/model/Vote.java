@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"vote_date", "user_id"}, name = "menu_unique_vote_date_user_id_idx")})
+@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "vote_date"}, name = "vote_unique_user_date_idx")})
 public class Vote extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

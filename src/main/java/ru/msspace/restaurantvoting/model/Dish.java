@@ -3,6 +3,7 @@ package ru.msspace.restaurantvoting.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Positive;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "dish")
+@Table(name = "dish", uniqueConstraints = {@UniqueConstraint(columnNames = {"menu_id", "name"}, name = "dish_unique_menu_name_idx")})
 public class Dish extends NamedEntity {
 
     @Column(name = "price", nullable = false)

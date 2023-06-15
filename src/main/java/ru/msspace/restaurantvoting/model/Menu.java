@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "menu", uniqueConstraints = {@UniqueConstraint(columnNames = {"menu_date", "restaurant_id",}, name = "menu_unique_menu_date_restaurant_idx")})
+@Table(name = "menu", uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "menu_date"}, name = "menu_unique_restaurant_date_idx")})
 public class Menu extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
