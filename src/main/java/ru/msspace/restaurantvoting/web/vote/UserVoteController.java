@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.msspace.restaurantvoting.model.Vote;
 import ru.msspace.restaurantvoting.to.VoteTo;
-import ru.msspace.restaurantvoting.util.DateTimeUtil;
 import ru.msspace.restaurantvoting.util.VoteUtil;
 import ru.msspace.restaurantvoting.web.AuthUser;
 
@@ -44,8 +43,7 @@ public class UserVoteController extends AbstractVoteController {
                        @RequestBody @Valid VoteTo voteTo) {
         log.info("update vote {} from user {}", voteTo, authUser);
         LocalDateTime dateTime = LocalDateTime.now();
-        DateTimeUtil.checkTime(dateTime.toLocalTime());
-        service.update(voteTo, authUser, dateTime.toLocalDate());
+        service.update(voteTo, authUser, dateTime);
     }
 
     @GetMapping("/today")

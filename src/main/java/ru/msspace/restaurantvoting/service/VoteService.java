@@ -7,10 +7,12 @@ import ru.msspace.restaurantvoting.model.Menu;
 import ru.msspace.restaurantvoting.model.Vote;
 import ru.msspace.restaurantvoting.repository.VoteRepository;
 import ru.msspace.restaurantvoting.to.VoteTo;
+import ru.msspace.restaurantvoting.util.DateTimeUtil;
 import ru.msspace.restaurantvoting.util.VoteUtil;
 import ru.msspace.restaurantvoting.web.AuthUser;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
@@ -26,7 +28,9 @@ public class VoteService {
     }
 
     @Transactional
-    public void update(VoteTo voteTo, AuthUser authUser, LocalDate date) {
+    public void update(VoteTo voteTo, AuthUser authUser, LocalDateTime dateTime) {
+        DateTimeUtil.checkTime(dateTime.toLocalTime());
+        LocalDate date = dateTime.toLocalDate();
         Vote voteExisted = repository.getExistedOrBelonged(date, authUser.getUser());
         Menu menuExisted = menuService.get(voteTo.getRestaurantId(), date);
         Vote update = new Vote(voteExisted.getId(), authUser.getUser(), menuExisted.getRestaurant(), date);
