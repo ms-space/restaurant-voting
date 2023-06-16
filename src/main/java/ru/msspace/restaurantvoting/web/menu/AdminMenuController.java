@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.msspace.restaurantvoting.service.MenuService;
+import ru.msspace.restaurantvoting.model.Menu;
 import ru.msspace.restaurantvoting.to.MenuTo;
 import ru.msspace.restaurantvoting.util.MenuUtil;
 
@@ -25,7 +25,6 @@ import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.checkNe
 public class AdminMenuController extends AbstractMenuController {
     static final String REST_URL = "/api/admin";
 
-    private final MenuService service;
 
     @GetMapping("restaurants/{restaurantId}/menus/{menuId}")
     public MenuTo get(@PathVariable int restaurantId, @PathVariable int menuId) {
@@ -42,7 +41,7 @@ public class AdminMenuController extends AbstractMenuController {
     @Override
     @GetMapping("/menus/by-date")
     public List<MenuTo> getAllByDate(@RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return MenuUtil.createTos(repository.getAllByDate(date));
+        return super.getAllByDate(date);
     }
 
     @GetMapping("restaurants/{restaurantId}/menus")
@@ -55,7 +54,8 @@ public class AdminMenuController extends AbstractMenuController {
     public ResponseEntity<MenuTo> create(@Valid @RequestBody MenuTo menuTo, @PathVariable int restaurantId) {
         log.info("create menu {} for restaurant id={}", menuTo, restaurantId);
         checkNew(menuTo);
-        MenuTo created = service.save(restaurantId, menuTo);
+        Menu menu = MenuUtil.createNewFromTo(menuTo);
+        MenuTo created = MenuUtil.createTo(service.save(restaurantId, menu));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{restaurant_id}/menus/{id}")
                 .buildAndExpand(restaurantId, created.getId()).toUri();
@@ -69,7 +69,8 @@ public class AdminMenuController extends AbstractMenuController {
                        @PathVariable int menuId) {
         log.info("update menu {} for restaurant id={}", menuTo, restaurantId);
         assureIdConsistent(menuTo, menuId);
-        service.update(restaurantId, menuTo);
+        Menu menu = MenuUtil.createNewFromTo(menuTo);
+        service.update(restaurantId, menu);
     }
 
     @DeleteMapping("restaurants/{restaurantId}/menus/{menuId}")
