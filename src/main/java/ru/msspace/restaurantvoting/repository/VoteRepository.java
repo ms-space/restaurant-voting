@@ -3,6 +3,7 @@ package ru.msspace.restaurantvoting.repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ru.msspace.restaurantvoting.error.DataConflictException;
+import ru.msspace.restaurantvoting.error.NotFoundException;
 import ru.msspace.restaurantvoting.model.User;
 import ru.msspace.restaurantvoting.model.Vote;
 
@@ -25,5 +26,10 @@ public interface VoteRepository extends BaseRepository<Vote> {
     default Vote getExistedOrBelonged(LocalDate date, User user) {
         return getByUserAndDate(date, user).orElseThrow(
                 () -> new DataConflictException("Vote with date=" + date + " is not exist or doesn't belong user id=" + user.id()));
+    }
+
+    default Vote findExistedOrBelonged(LocalDate date, User user) {
+        return getByUserAndDate(date, user).orElseThrow(
+                () -> new NotFoundException("Vote with date=" + date + " and with user " + user + " not found"));
     }
 }

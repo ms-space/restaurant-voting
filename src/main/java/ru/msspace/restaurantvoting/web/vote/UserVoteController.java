@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.msspace.restaurantvoting.model.Vote;
 import ru.msspace.restaurantvoting.to.VoteTo;
 import ru.msspace.restaurantvoting.util.VoteUtil;
 import ru.msspace.restaurantvoting.web.AuthUser;
@@ -17,7 +16,6 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.checkNew;
 
@@ -47,29 +45,23 @@ public class UserVoteController extends AbstractVoteController {
     }
 
     @GetMapping("/today")
-    public ResponseEntity<VoteTo> getForToday(@AuthenticationPrincipal AuthUser authUser) {
+    public VoteTo getForToday(@AuthenticationPrincipal AuthUser authUser) {
         LocalDate date = LocalDate.now();
         log.info("get vote for today {} for user {}", date, authUser);
-        return responseOfGetByUserAndDate(date, authUser);
+        return VoteUtil.createVoteTo(repository.findExistedOrBelonged(date, authUser.getUser()));
     }
 
     @GetMapping("/by-date")
-    public ResponseEntity<VoteTo> getByDate(@AuthenticationPrincipal AuthUser authUser,
-                                            @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public VoteTo getByDate(@AuthenticationPrincipal AuthUser authUser,
+                            @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("get vote for user {} on date {}", authUser, date);
-        return responseOfGetByUserAndDate(date, authUser);
+        return VoteUtil.createVoteTo(repository.findExistedOrBelonged(date, authUser.getUser()));
+
     }
 
     @GetMapping
     public List<VoteTo> getAll(@AuthenticationPrincipal AuthUser authUser) {
         log.info("get all votes for user {}", authUser);
         return VoteUtil.createVoteTos(repository.getAllByUser(authUser.getUser()));
-    }
-
-    private ResponseEntity<VoteTo> responseOfGetByUserAndDate(LocalDate date, AuthUser authUser) {
-        Optional<Vote> vote = repository.getByUserAndDate(date, authUser.getUser());
-        return vote
-                .map(value -> ResponseEntity.ok(VoteUtil.createVoteTo(value)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
