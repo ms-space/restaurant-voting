@@ -28,8 +28,8 @@ public class AdminMenuController extends AbstractMenuController {
 
     @GetMapping("restaurants/{restaurantId}/menus/{menuId}")
     public MenuTo get(@PathVariable int restaurantId, @PathVariable int menuId) {
-        log.info("get menu id={} from restaurant id={}", menuId, restaurantId);
-        return MenuUtil.createTo(service.get(restaurantId, menuId));
+        log.info("get menu with id={} and with restaurant id={}", menuId, restaurantId);
+        return service.get(menuId, restaurantId);
     }
 
     @GetMapping("/menus/today")
@@ -46,13 +46,13 @@ public class AdminMenuController extends AbstractMenuController {
 
     @GetMapping("restaurants/{restaurantId}/menus")
     public List<MenuTo> getAll(@PathVariable int restaurantId) {
-        log.info("get all menu from restaurant id={}", restaurantId);
-        return MenuUtil.createTos(service.getAll(restaurantId));
+        log.info("get all menu for restaurant with id={}", restaurantId);
+        return service.getAllByRestaurant(restaurantId);
     }
 
     @PostMapping(value = "restaurants/{restaurantId}/menus", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MenuTo> create(@Valid @RequestBody MenuTo menuTo, @PathVariable int restaurantId) {
-        log.info("create menu {} for restaurant id={}", menuTo, restaurantId);
+        log.info("create menu {} for restaurant with id={}", menuTo, restaurantId);
         checkNew(menuTo);
         Menu menu = MenuUtil.createNewFromTo(menuTo);
         MenuTo created = MenuUtil.createTo(service.save(restaurantId, menu));
@@ -67,7 +67,7 @@ public class AdminMenuController extends AbstractMenuController {
     public void update(@Valid @RequestBody MenuTo menuTo,
                        @PathVariable int restaurantId,
                        @PathVariable int menuId) {
-        log.info("update menu {} for restaurant id={}", menuTo, restaurantId);
+        log.info("update menu {} for restaurant with id={}", menuTo, restaurantId);
         assureIdConsistent(menuTo, menuId);
         Menu menu = MenuUtil.createNewFromTo(menuTo);
         service.update(restaurantId, menu);
@@ -76,7 +76,7 @@ public class AdminMenuController extends AbstractMenuController {
     @DeleteMapping("restaurants/{restaurantId}/menus/{menuId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int restaurantId, @PathVariable int menuId) {
-        log.info("delete  menu id={} for restaurant id={}", menuId, restaurantId);
-        service.delete(restaurantId, menuId);
+        log.info("delete menu with id={} for restaurant with id={}", menuId, restaurantId);
+        service.delete(menuId, restaurantId);
     }
 }

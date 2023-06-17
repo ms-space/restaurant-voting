@@ -35,4 +35,4 @@ VALUES ('Dish1', 200, 1),
 INSERT INTO VOTE (vote_date, restaurant_id, user_id)
 VALUES ('2023-05-01', 1, 1),
        ('2023-05-01', 2, 2),
-       (CURRENT_DATE(), 1, 2);
+       (CURRENT_DATE(), 1, 1);

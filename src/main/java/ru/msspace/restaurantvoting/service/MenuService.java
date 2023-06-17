@@ -29,35 +29,26 @@ public class MenuService {
 
     @Transactional
     public void update(int restaurantId, Menu menu) {
-        restaurantRepository.getExisted(restaurantId);
-        Menu existedOrBelonged = repository.getExistedOrBelonged(restaurantId, menu.id());
+        Menu existedOrBelonged = repository.getExistedOrBelonged(menu.id(), restaurantId);
         menu.setRestaurant(existedOrBelonged.getRestaurant());
         repository.save(menu);
     }
 
     @Transactional
     public void delete(int restaurantId, int menuId) {
-        restaurantRepository.getExisted(restaurantId);
-        repository.getExistedOrBelonged(restaurantId, menuId);
+        repository.getExistedOrBelonged(menuId, restaurantId);
         repository.deleteExisted(menuId);
     }
 
-    public Menu get(int restaurantId, int menuId) {
-        restaurantRepository.getExisted(restaurantId);
-        return repository.getExistedOrBelonged(restaurantId, menuId);
-    }
-
-    public Menu get(int restaurantId, LocalDate date) {
-        restaurantRepository.getExisted(restaurantId);
-        return repository.getExistedOrBelonged(restaurantId, date);
+    public MenuTo get(int menuId, int restaurantId) {
+        return MenuUtil.createTo(repository.findExistedOrBelonged(menuId, restaurantId));
     }
 
     public List<MenuTo> getAllByDate(LocalDate date) {
         return MenuUtil.createTos(repository.getAllByDate(date));
     }
 
-    public List<Menu> getAll(int restaurantId) {
-        restaurantRepository.getExisted(restaurantId);
-        return repository.getAll(restaurantId);
+    public List<MenuTo> getAllByRestaurant(int restaurantId) {
+        return MenuUtil.createTos(repository.getAllByRestaurant(restaurantId));
     }
 }
