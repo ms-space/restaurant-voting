@@ -24,13 +24,11 @@ VALUES ('Dish1', 200, 1),
        ('Dish3', 300, 1),
        ('Dish4', 250, 2),
        ('Dish5', 200, 2),
-       ('Dish6', 120, 2),
-       ('Dish7', 400, 2),
+       ('Dish6', 120, 3),
+       ('Dish7', 400, 3),
        ('Dish8', 450, 3),
-       ('Dish9', 700, 3),
-       ('Dish10', 500, 3),
-       ('Dish11', 300, 4),
-       ('Dish12', 800, 4);
+       ('Dish9', 700, 4),
+       ('Dish10', 500, 4);
 
 INSERT INTO VOTE (vote_date, restaurant_id, user_id)
 VALUES ('2023-05-01', 1, 1),

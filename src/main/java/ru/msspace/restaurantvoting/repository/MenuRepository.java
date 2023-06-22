@@ -19,15 +19,19 @@ public interface MenuRepository extends BaseRepository<Menu> {
     @Query("SELECT m FROM Menu m JOIN FETCH m.dishes WHERE m.id=:menuId AND m.restaurant.id=:restaurantId")
     Optional<Menu> getByIdAndRestaurant(int menuId, int restaurantId);
 
+    @Query("SELECT m FROM Menu m LEFT JOIN FETCH m.dishes WHERE m.id=:id")
+    Optional<Menu> findExisted(int id);
+
     @Query("SELECT m FROM Menu m JOIN FETCH m.dishes WHERE m.restaurant.id=:restaurantId")
     List<Menu> getAllByRestaurant(int restaurantId);
 
     @Query("SELECT m FROM Menu m JOIN FETCH m.dishes WHERE m.date=:date")
     List<Menu> getAllByDate(LocalDate date);
 
-    default Menu findExistedOrBelonged(int menuId, int restaurantId) {
-        return getByIdAndRestaurant(menuId, restaurantId).orElseThrow(
-                () -> new NotFoundException("Menu with id=" + menuId + " and with restaurant id= " + restaurantId + " not found"));
+    @Override
+    default Menu getExisted(int id) {
+        return findExisted(id).orElseThrow(
+                () -> new NotFoundException("Menu with id=" + id + " not found"));
     }
 
     default Menu getExistedOrBelonged(int restaurantId, LocalDate date) {

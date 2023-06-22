@@ -28,20 +28,20 @@ public class MenuService {
     }
 
     @Transactional
-    public void update(int restaurantId, Menu menu) {
-        Menu existedOrBelonged = repository.getExistedOrBelonged(menu.id(), restaurantId);
-        menu.setRestaurant(existedOrBelonged.getRestaurant());
+    public void update(Menu menu, int id) {
+        Menu existed = repository.getExisted(id);
+        menu.setRestaurant(existed.getRestaurant());
         repository.save(menu);
     }
 
     @Transactional
-    public void delete(int restaurantId, int menuId) {
-        repository.getExistedOrBelonged(menuId, restaurantId);
-        repository.deleteExisted(menuId);
+    public void delete(int restaurantId, int id) {
+        repository.getExistedOrBelonged(id, restaurantId);
+        repository.deleteExisted(id);
     }
 
-    public MenuTo get(int menuId, int restaurantId) {
-        return MenuUtil.createTo(repository.findExistedOrBelonged(menuId, restaurantId));
+    public MenuTo get(int id) {
+        return MenuUtil.createTo(repository.getExisted(id));
     }
 
     public List<MenuTo> getAllByDate(LocalDate date) {

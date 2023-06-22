@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.msspace.restaurantvoting.model.Menu;
+import ru.msspace.restaurantvoting.repository.MenuRepository;
 import ru.msspace.restaurantvoting.to.MenuTo;
 import ru.msspace.restaurantvoting.util.MenuUtil;
 
@@ -25,11 +26,12 @@ import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.checkNe
 public class AdminMenuController extends AbstractMenuController {
     static final String REST_URL = "/api/admin";
 
+    private final MenuRepository repository;
 
-    @GetMapping("restaurants/{restaurantId}/menus/{menuId}")
-    public MenuTo get(@PathVariable int restaurantId, @PathVariable int menuId) {
-        log.info("get menu with id={} and with restaurant id={}", menuId, restaurantId);
-        return service.get(menuId, restaurantId);
+    @GetMapping("/menus/{id}")
+    public MenuTo get(@PathVariable int id) {
+        log.info("get menu with id={}", id);
+        return service.get(id);
     }
 
     @GetMapping("/menus/today")
@@ -50,9 +52,9 @@ public class AdminMenuController extends AbstractMenuController {
         return service.getAllByRestaurant(restaurantId);
     }
 
-    @PostMapping(value = "restaurants/{restaurantId}/menus", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/restaurants/{restaurantId}/menus", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MenuTo> create(@Valid @RequestBody MenuTo menuTo, @PathVariable int restaurantId) {
-        log.info("create menu {} for restaurant with id={}", menuTo, restaurantId);
+        log.info("create {} for restaurant with id={}", menuTo, restaurantId);
         checkNew(menuTo);
         Menu menu = MenuUtil.createNewFromTo(menuTo);
         MenuTo created = MenuUtil.createTo(service.save(restaurantId, menu));
@@ -62,21 +64,20 @@ public class AdminMenuController extends AbstractMenuController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @PutMapping(value = "restaurants/{restaurantId}/menus/{menuId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/menus/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody MenuTo menuTo,
-                       @PathVariable int restaurantId,
-                       @PathVariable int menuId) {
-        log.info("update menu {} for restaurant with id={}", menuTo, restaurantId);
-        assureIdConsistent(menuTo, menuId);
+                       @PathVariable int id) {
+        log.info("update {} with id={}", menuTo, id);
+        assureIdConsistent(menuTo, id);
         Menu menu = MenuUtil.createNewFromTo(menuTo);
-        service.update(restaurantId, menu);
+        service.update(menu, id);
     }
 
-    @DeleteMapping("restaurants/{restaurantId}/menus/{menuId}")
+    @DeleteMapping("/menus/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int restaurantId, @PathVariable int menuId) {
-        log.info("delete menu with id={} for restaurant with id={}", menuId, restaurantId);
-        service.delete(menuId, restaurantId);
+    public void delete(@PathVariable int id) {
+        log.info("delete menu with id={}", id);
+        repository.deleteExisted(id);
     }
 }
