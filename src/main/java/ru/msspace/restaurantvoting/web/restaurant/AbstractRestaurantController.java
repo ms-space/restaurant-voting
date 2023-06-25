@@ -2,9 +2,9 @@ package ru.msspace.restaurantvoting.web.restaurant;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import ru.msspace.restaurantvoting.model.Restaurant;
 import ru.msspace.restaurantvoting.repository.RestaurantRepository;
+import ru.msspace.restaurantvoting.service.RestaurantService;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -14,9 +14,11 @@ public abstract class AbstractRestaurantController {
     @Autowired
     protected RestaurantRepository repository;
 
-    @Cacheable("restaurants")
+    @Autowired
+    protected RestaurantService service;
+
     public Restaurant get(int id) {
         log.info("get restaurant id={}", id);
-        return repository.getExisted(id);
+        return service.get(id);
     }
 }
