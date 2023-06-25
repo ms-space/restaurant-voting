@@ -16,8 +16,8 @@ public interface MenuRepository extends BaseRepository<Menu> {
     @Query("SELECT m FROM Menu m JOIN FETCH m.dishes WHERE m.restaurant.id=:restaurantId AND m.date=:date")
     Optional<Menu> getByRestaurantAndDate(int restaurantId, LocalDate date);
 
-    @Query("SELECT m FROM Menu m JOIN FETCH m.dishes WHERE m.id=:menuId AND m.restaurant.id=:restaurantId")
-    Optional<Menu> getByIdAndRestaurant(int menuId, int restaurantId);
+    @Query("SELECT m FROM Menu m JOIN FETCH m.dishes WHERE m.id=:id AND m.restaurant.id=:restaurantId")
+    Optional<Menu> getByIdAndRestaurant(int id, int restaurantId);
 
     @Query("SELECT m FROM Menu m LEFT JOIN FETCH m.dishes WHERE m.id=:id")
     Optional<Menu> findExisted(int id);
