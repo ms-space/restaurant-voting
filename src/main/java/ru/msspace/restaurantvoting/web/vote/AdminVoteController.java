@@ -17,19 +17,19 @@ import java.util.List;
 @RequestMapping(value = AdminVoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class AdminVoteController extends AbstractVoteController {
-    static final String REST_URL = "api/admin/votes";
+    static final String REST_URL = "/api/admin/votes";
 
     @GetMapping("/by-date")
     public List<VoteTo> getAllByDate(
             @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("get all votes on date {}", date);
-        return VoteUtil.createVoteTos(repository.getAllByDate(date));
+        return VoteUtil.createTos(repository.getAllByDate(date));
     }
 
     @GetMapping("/today")
     public List<VoteTo> getAllToday() {
         LocalDate date = LocalDate.now();
-        log.info("get all votes on date {}", date);
-        return VoteUtil.createVoteTos(repository.getAllByDate(date));
+        log.info("get all votes on today {}", date);
+        return VoteUtil.createTos(repository.getAllByDate(date));
     }
 }

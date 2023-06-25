@@ -59,7 +59,7 @@ public class AdminMenuController extends AbstractMenuController {
         Menu menu = MenuUtil.createNewFromTo(menuTo);
         MenuTo created = MenuUtil.createTo(service.save(restaurantId, menu));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/{restaurant_id}/menus/{id}")
+                .path(REST_URL + "/menus/{id}")
                 .buildAndExpand(restaurantId, created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }

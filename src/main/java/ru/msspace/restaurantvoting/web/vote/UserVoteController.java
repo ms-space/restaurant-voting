@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.msspace.restaurantvoting.to.VoteTo;
+import ru.msspace.restaurantvoting.util.DateTimeUtil;
 import ru.msspace.restaurantvoting.util.VoteUtil;
 import ru.msspace.restaurantvoting.web.AuthUser;
 
@@ -22,14 +23,15 @@ import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.checkNe
 @RestController
 @RequestMapping(value = UserVoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserVoteController extends AbstractVoteController {
-    static final String REST_URL = "api/user/votes";
+    static final String REST_URL = "/api/user/votes";
 
     @PostMapping(value = "/today", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<VoteTo> create(@AuthenticationPrincipal AuthUser authUser,
                                          @RequestBody @Valid VoteTo voteTo) {
-        log.info("create vote {} from user {}", voteTo, authUser);
+        int userId = authUser.id();
+        log.info("create {} for user with id={}", voteTo, userId);
         checkNew(voteTo);
-        VoteTo created = service.create(voteTo, authUser, LocalDate.now());
+        VoteTo created = service.create(voteTo, userId, LocalDate.now());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/today").build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
@@ -39,29 +41,33 @@ public class UserVoteController extends AbstractVoteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthUser authUser,
                        @RequestBody @Valid VoteTo voteTo) {
-        log.info("update vote {} from user {}", voteTo, authUser);
-        LocalDateTime dateTime = LocalDateTime.now();
-        service.update(voteTo, authUser, dateTime);
+        int userId = authUser.id();
+        LocalDateTime dateTime = DateTimeUtil.getVotingDateTime();
+        log.info("dateTime={}, update {} for user with id={}", dateTime, voteTo, userId);
+        service.update(voteTo, userId, dateTime);
     }
 
     @GetMapping("/today")
     public VoteTo getForToday(@AuthenticationPrincipal AuthUser authUser) {
+        int userId = authUser.id();
         LocalDate date = LocalDate.now();
-        log.info("get vote for today {} for user {}", date, authUser);
-        return VoteUtil.createVoteTo(repository.findExistedOrBelonged(date, authUser.getUser()));
+        log.info("get vote for today {} for user with id={}", date, userId);
+        return VoteUtil.createTo(repository.findExistedOrBelonged(date, userId));
     }
 
     @GetMapping("/by-date")
     public VoteTo getByDate(@AuthenticationPrincipal AuthUser authUser,
                             @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        log.info("get vote for user {} on date {}", authUser, date);
-        return VoteUtil.createVoteTo(repository.findExistedOrBelonged(date, authUser.getUser()));
+        int userId = authUser.id();
+        log.info("get vote by date {} for user with id={}", date, userId);
+        return VoteUtil.createTo(repository.findExistedOrBelonged(date, userId));
 
     }
 
     @GetMapping
     public List<VoteTo> getAll(@AuthenticationPrincipal AuthUser authUser) {
-        log.info("get all votes for user {}", authUser);
-        return VoteUtil.createVoteTos(repository.getAllByUser(authUser.getUser()));
+        int userId = authUser.id();
+        log.info("get all votes for user with id={}", userId);
+        return VoteUtil.createTos(repository.getAllByUser(userId));
     }
 }

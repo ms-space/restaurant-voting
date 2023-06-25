@@ -34,9 +34,8 @@ public class Vote extends BaseEntity {
     @Column(name = "vote_date", nullable = false)
     private LocalDate date;
 
-    public Vote(Integer id, @NotNull User user, @NotNull Restaurant restaurant, @NotNull LocalDate date) {
+    public Vote(Integer id, @NotNull Restaurant restaurant, @NotNull LocalDate date) {
         super(id);
-        this.user = user;
         this.restaurant = restaurant;
         this.date = date;
     }

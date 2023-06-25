@@ -6,35 +6,41 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.msspace.restaurantvoting.model.Menu;
 import ru.msspace.restaurantvoting.model.Vote;
 import ru.msspace.restaurantvoting.repository.MenuRepository;
+import ru.msspace.restaurantvoting.repository.UserRepository;
 import ru.msspace.restaurantvoting.repository.VoteRepository;
 import ru.msspace.restaurantvoting.to.VoteTo;
 import ru.msspace.restaurantvoting.util.DateTimeUtil;
 import ru.msspace.restaurantvoting.util.VoteUtil;
-import ru.msspace.restaurantvoting.web.AuthUser;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.assureIdConsistent;
 
 @Service
 @AllArgsConstructor
 public class VoteService {
     private final VoteRepository repository;
     private final MenuRepository menuRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public VoteTo create(VoteTo voteTo, AuthUser authUser, LocalDate date) {
-        Menu menuExisted = menuRepository.getExistedOrBelonged(voteTo.getRestaurantId(), date);
-        Vote create = new Vote(null, authUser.getUser(), menuExisted.getRestaurant(), date);
-        return VoteUtil.createVoteTo(repository.save(create));
+    public VoteTo create(VoteTo voteTo, int userId, LocalDate date) {
+        Menu menuExistedOrBelonged = menuRepository.getExistedOrBelonged(voteTo.getRestaurantId(), date);
+        Vote create = new Vote(null, menuExistedOrBelonged.getRestaurant(), date);
+        create.setUser(userRepository.getExisted(userId));
+        return VoteUtil.createTo(repository.save(create));
     }
 
     @Transactional
-    public void update(VoteTo voteTo, AuthUser authUser, LocalDateTime dateTime) {
+    public void update(VoteTo voteTo, int userId, LocalDateTime dateTime) {
         DateTimeUtil.checkTime(dateTime.toLocalTime());
         LocalDate date = dateTime.toLocalDate();
-        Vote voteExisted = repository.getExistedOrBelonged(date, authUser.getUser());
-        Menu menuExisted = menuRepository.getExistedOrBelonged(voteTo.getRestaurantId(), date);
-        Vote update = new Vote(voteExisted.getId(), authUser.getUser(), menuExisted.getRestaurant(), date);
+        Vote voteExistedOrBelonged = repository.getExistedOrBelonged(date, userId);
+        assureIdConsistent(voteTo, voteExistedOrBelonged.id());
+        Menu menuExistedOrBelonged = menuRepository.getExistedOrBelonged(voteTo.getRestaurantId(), date);
+        Vote update = new Vote(voteTo.getId(), menuExistedOrBelonged.getRestaurant(), date);
+        update.setUser(userRepository.getExisted(userId));
         repository.save(update);
     }
 }

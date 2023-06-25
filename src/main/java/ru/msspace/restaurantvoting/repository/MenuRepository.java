@@ -39,8 +39,8 @@ public interface MenuRepository extends BaseRepository<Menu> {
                 () -> new DataConflictException("Menu with date=" + date + " is not exist or doesn't belong restaurant id=" + restaurantId));
     }
 
-    default Menu getExistedOrBelonged(int menuId, int restaurantId) {
-        return getByIdAndRestaurant(menuId, restaurantId).orElseThrow(
-                () -> new DataConflictException("Menu with id=" + menuId + " is not exist or doesn't belong restaurant id=" + restaurantId));
+    default Menu getExistedOrBelonged(int id, int restaurantId) {
+        return getByIdAndRestaurant(id, restaurantId).orElseThrow(
+                () -> new DataConflictException("Menu with id=" + id + " is not exist or doesn't belong restaurant id=" + restaurantId));
     }
 }
