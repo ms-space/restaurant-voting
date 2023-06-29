@@ -18,6 +18,7 @@ public class MenuTestData {
             MatcherFactory.usingIgnoringFieldsComparator(MenuTo.class, "dishes.id");
 
     public static final int MENU1_ID = 1;
+    public static final int MENU4_ID = MENU1_ID + 3;
     public static final int DISH1_ID = 1;
 
     public static final Dish dish1 = new Dish(DISH1_ID, "Dish1", 200);

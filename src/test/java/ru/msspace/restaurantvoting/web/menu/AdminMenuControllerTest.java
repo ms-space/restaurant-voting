@@ -99,8 +99,8 @@ class AdminMenuControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + "menus/" + MENU1_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + "menus/" + MENU4_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(menuRepository.findById(MENU1_ID).isPresent());
+        assertFalse(menuRepository.findById(MENU4_ID).isPresent());
     }
 }

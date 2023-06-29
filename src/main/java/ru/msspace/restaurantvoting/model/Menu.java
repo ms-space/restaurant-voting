@@ -30,7 +30,6 @@ public class Menu extends BaseEntity {
 
     @ToString.Exclude
     @JoinColumn(name = "menu_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Dish> dishes;
 

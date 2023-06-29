@@ -48,9 +48,9 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + RESTAURANT1_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + RESTAURANT3_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(restaurantRepository.findById(RESTAURANT1_ID).isPresent());
+        assertFalse(restaurantRepository.findById(RESTAURANT3_ID).isPresent());
     }
 
     @Test

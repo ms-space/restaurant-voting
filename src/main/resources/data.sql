@@ -10,7 +10,8 @@ VALUES ('USER', 1),
 
 INSERT INTO RESTAURANT (name, address)
 VALUES ('Restaurant1', 'Address1'),
-       ('Restaurant2', 'Address2');
+       ('Restaurant2', 'Address2'),
+       ('Restaurant3', 'Address3');
 
 INSERT INTO MENU (menu_date, restaurant_id)
 VALUES ('2023-06-01', 1),

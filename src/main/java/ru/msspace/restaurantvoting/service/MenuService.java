@@ -3,9 +3,11 @@ package ru.msspace.restaurantvoting.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.msspace.restaurantvoting.error.DataConflictException;
 import ru.msspace.restaurantvoting.model.Menu;
 import ru.msspace.restaurantvoting.model.Restaurant;
 import ru.msspace.restaurantvoting.repository.MenuRepository;
+import ru.msspace.restaurantvoting.repository.VoteRepository;
 import ru.msspace.restaurantvoting.to.MenuTo;
 import ru.msspace.restaurantvoting.util.MenuUtil;
 
@@ -17,6 +19,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MenuService {
     private final MenuRepository repository;
+    private final VoteRepository voteRepository;
     private final RestaurantService restaurantService;
 
     @Transactional
@@ -34,13 +37,14 @@ public class MenuService {
     }
 
     @Transactional
-    public void delete(int restaurantId, int id) {
-        repository.getExistedOrBelonged(id, restaurantId);
-        repository.deleteExisted(id);
+    public void delete(int id) {
+        Menu existed = repository.getExisted(id);
+        participatesInVoting(existed);
+        repository.delete(existed);
     }
 
     public MenuTo get(int id) {
-        return MenuUtil.createTo(repository.getExisted(id));
+        return MenuUtil.createTo(repository.getExistedWithDishes(id));
     }
 
     public List<MenuTo> getAllByDate(LocalDate date) {
@@ -49,5 +53,11 @@ public class MenuService {
 
     public List<MenuTo> getAllByRestaurant(int restaurantId) {
         return MenuUtil.createTos(repository.getAllByRestaurant(restaurantId));
+    }
+
+    private void participatesInVoting(Menu menu) {
+        if (voteRepository.getByRestaurantAndDate(menu.getRestaurant().id(), menu.getDate()).isPresent()) {
+            throw new DataConflictException("Unable to delete menu due to voting");
+        }
     }
 }

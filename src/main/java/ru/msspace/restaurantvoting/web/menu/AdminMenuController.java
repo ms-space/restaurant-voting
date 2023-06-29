@@ -78,6 +78,6 @@ public class AdminMenuController extends AbstractMenuController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("delete menu with id={}", id);
-        repository.deleteExisted(id);
+        service.delete(id);
     }
 }
