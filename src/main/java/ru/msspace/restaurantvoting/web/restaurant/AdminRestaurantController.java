@@ -1,7 +1,6 @@
 package ru.msspace.restaurantvoting.web.restaurant;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,28 +9,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.msspace.restaurantvoting.model.Restaurant;
 
 import java.net.URI;
-import java.util.List;
 
 import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-@AllArgsConstructor
 public class AdminRestaurantController extends AbstractRestaurantController {
     static final String REST_URL = "/api/admin/restaurants";
-
-    @Override
-    @GetMapping("/{id}")
-    public Restaurant get(@PathVariable int id) {
-        return super.get(id);
-    }
-
-    @GetMapping
-    public List<Restaurant> getAll() {
-        log.info("get all restaurants");
-        return repository.findAll();
-    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
