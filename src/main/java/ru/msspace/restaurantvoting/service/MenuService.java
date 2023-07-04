@@ -13,6 +13,7 @@ import ru.msspace.restaurantvoting.util.MenuUtil;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -24,7 +25,7 @@ public class MenuService {
 
     @Transactional
     public Menu save(int restaurantId, Menu menu) {
-        Restaurant restaurantExisted = restaurantService.get(restaurantId);
+        Restaurant restaurantExisted = checkAndGetExistedRestaurant(restaurantId);
         menu.setRestaurant(restaurantExisted);
         return repository.save(menu);
     }
@@ -51,7 +52,14 @@ public class MenuService {
         return MenuUtil.createTos(repository.getAllByDate(date));
     }
 
+    public Optional<MenuTo> getByRestaurantAndDate(Integer restaurantId, LocalDate date) {
+        checkAndGetExistedRestaurant(restaurantId);
+        Optional<Menu> menu = repository.getByRestaurantAndDate(restaurantId, date);
+        return menu.flatMap(m -> Optional.of(MenuUtil.createTo(m)));
+    }
+
     public List<MenuTo> getAllByRestaurant(int restaurantId) {
+        checkAndGetExistedRestaurant(restaurantId);
         return MenuUtil.createTos(repository.getAllByRestaurant(restaurantId));
     }
 
@@ -59,5 +67,9 @@ public class MenuService {
         if (voteRepository.getByRestaurantAndDate(menu.getRestaurant().id(), menu.getDate()).isPresent()) {
             throw new DataConflictException("Unable to delete menu due to voting");
         }
+    }
+
+    private Restaurant checkAndGetExistedRestaurant(Integer restaurantId) {
+        return restaurantService.get(restaurantId);
     }
 }

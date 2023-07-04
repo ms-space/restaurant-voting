@@ -52,7 +52,7 @@ class AdminMenuControllerTest extends AbstractMenuControllerTest {
 
     @Test
     void create() throws Exception {
-        MenuTo newMenuTo = createTo(MenuTestData.getNew());
+        MenuTo newMenuTo = createTo(getNew());
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL_SLASH + "restaurants/" + RESTAURANT1_ID + "/menus")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newMenuTo)));
