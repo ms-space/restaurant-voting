@@ -15,7 +15,6 @@ public class VoteTestData {
     public static final int VOTE1_ID = 1;
 
     public static final Vote vote1 = new Vote(VOTE1_ID, restaurant1, LocalDate.of(2023, 6, 1));
-    public static final Vote vote2 = new Vote(VOTE1_ID + 1, restaurant2, LocalDate.of(2023, 6, 1));
     public static final Vote vote3 = new Vote(VOTE1_ID + 2, restaurant1, LocalDate.now());
 
     public static Vote getNew() {

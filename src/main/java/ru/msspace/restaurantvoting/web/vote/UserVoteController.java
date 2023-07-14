@@ -1,6 +1,8 @@
 package ru.msspace.restaurantvoting.web.vote;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -8,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.msspace.restaurantvoting.repository.VoteRepository;
+import ru.msspace.restaurantvoting.service.VoteService;
 import ru.msspace.restaurantvoting.to.VoteTo;
 import ru.msspace.restaurantvoting.util.DateTimeUtil;
 import ru.msspace.restaurantvoting.util.VoteUtil;
@@ -20,10 +24,15 @@ import java.util.List;
 
 import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.checkNew;
 
+@Slf4j
 @RestController
+@AllArgsConstructor
 @RequestMapping(value = UserVoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserVoteController extends AbstractVoteController {
+public class UserVoteController {
     static final String REST_URL = "/api/user/votes";
+
+    private VoteService service;
+    private VoteRepository repository;
 
     @PostMapping(value = "/today", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<VoteTo> create(@AuthenticationPrincipal AuthUser authUser,
