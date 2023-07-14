@@ -56,14 +56,6 @@ public class UserVoteController {
         service.update(voteTo, userId, dateTime);
     }
 
-    @GetMapping("/today")
-    public VoteTo getForToday(@AuthenticationPrincipal AuthUser authUser) {
-        int userId = authUser.id();
-        LocalDate date = LocalDate.now();
-        log.info("get vote for today {} for user with id={}", date, userId);
-        return VoteUtil.createTo(repository.findExistedOrBelonged(date, userId));
-    }
-
     @GetMapping("/by-date")
     public VoteTo getByDate(@AuthenticationPrincipal AuthUser authUser,
                             @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {

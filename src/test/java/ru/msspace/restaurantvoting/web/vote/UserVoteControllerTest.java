@@ -79,16 +79,6 @@ class UserVoteControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER_MAIL)
-    void getForToday() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "today"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(VOTE_TO_MATCHER.contentJson(createTo(vote3)));
-    }
-
-    @Test
-    @WithUserDetails(value = USER_MAIL)
     void getByDate() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "by-date")
                 .param("date", "2023-06-01"))
