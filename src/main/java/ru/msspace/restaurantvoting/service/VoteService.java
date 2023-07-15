@@ -14,6 +14,7 @@ import ru.msspace.restaurantvoting.util.VoteUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static ru.msspace.restaurantvoting.util.validation.ValidationUtil.assureIdConsistent;
 
@@ -42,5 +43,10 @@ public class VoteService {
         Vote update = new Vote(voteTo.getId(), menuExistedOrBelonged.getRestaurant(), date);
         update.setUser(userRepository.getExisted(userId));
         repository.save(update);
+    }
+
+    public Optional<VoteTo> getByDate(LocalDate date, int userId) {
+        Optional<Vote> vote = repository.getByUserAndDate(date, userId);
+        return vote.map(VoteUtil::createTo);
     }
 }

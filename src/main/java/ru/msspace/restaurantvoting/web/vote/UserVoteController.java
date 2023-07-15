@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -57,11 +58,14 @@ public class UserVoteController {
     }
 
     @GetMapping("/by-date")
-    public VoteTo getByDate(@AuthenticationPrincipal AuthUser authUser,
-                            @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public ResponseEntity<VoteTo> getByDate(@AuthenticationPrincipal AuthUser authUser,
+                                            @Nullable @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        if (date == null) {
+            date = LocalDate.now();
+        }
         int userId = authUser.id();
         log.info("get vote by date {} for user with id={}", date, userId);
-        return VoteUtil.createTo(repository.findExistedOrBelonged(date, userId));
+        return ResponseEntity.of(service.getByDate(date, userId));
 
     }
 
