@@ -25,7 +25,7 @@ public class MenuService {
 
     @Transactional
     public Menu save(int restaurantId, Menu menu) {
-        Restaurant restaurantExisted = checkAndGetExistedRestaurant(restaurantId);
+        Restaurant restaurantExisted = getExistedRestaurant(restaurantId);
         menu.setRestaurant(restaurantExisted);
         return repository.save(menu);
     }
@@ -49,17 +49,18 @@ public class MenuService {
     }
 
     public List<MenuTo> getAllByDate(LocalDate date) {
-        return MenuUtil.createTos(repository.getAllByDate(date));
+        List<Menu> menus = repository.getAllByDate(date);
+        return !(menus.isEmpty()) ? MenuUtil.createTos(repository.getAllByDate(date)) : null;
     }
 
     public Optional<MenuTo> getByRestaurantAndDate(Integer restaurantId, LocalDate date) {
-        checkAndGetExistedRestaurant(restaurantId);
+        getExistedRestaurant(restaurantId);
         Optional<Menu> menu = repository.getByRestaurantAndDate(restaurantId, date);
-        return menu.flatMap(m -> Optional.of(MenuUtil.createTo(m)));
+        return menu.map(MenuUtil::createTo);
     }
 
     public List<MenuTo> getAllByRestaurant(int restaurantId) {
-        checkAndGetExistedRestaurant(restaurantId);
+        getExistedRestaurant(restaurantId);
         return MenuUtil.createTos(repository.getAllByRestaurant(restaurantId));
     }
 
@@ -69,7 +70,7 @@ public class MenuService {
         }
     }
 
-    private Restaurant checkAndGetExistedRestaurant(Integer restaurantId) {
+    private Restaurant getExistedRestaurant(Integer restaurantId) {
         return restaurantService.get(restaurantId);
     }
 }
